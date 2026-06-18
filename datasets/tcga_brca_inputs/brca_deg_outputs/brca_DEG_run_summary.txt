@@ -1,0 +1,16 @@
+BRCA DEG binary matrix construction
+cancer: breast invasive carcinoma
+expression: tcga_RSEM_Hugo_norm_count.gz
+phenotype: TCGA_phenotype_denseDataOnlyDownload.tsv.gz
+log2p_applied_by_script: False
+z_cutoff: 2.807033768343811
+p_value_rule: two-sided Gaussian p <= 0.005
+normal_samples: 113
+tumor_samples: 1092
+genes: 58581
+matrix_shape: 1092 tumor samples x 58581 genes
+total_DEG_ones: 4540073
+overall_DEG_fraction: 0.070971
+matrix_file: brca_deg_outputs/brca_DEG_binary_matrix.csv.gz
+normal_baseline_file: brca_deg_outputs/brca_normal_baseline_by_gene.csv
+gene_summary_file: brca_deg_outputs/brca_DEG_gene_summary.csv

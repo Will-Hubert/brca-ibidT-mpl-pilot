@@ -68,3 +68,24 @@ beta_total_le_bootstraps: True
 alpha_each_tree_contributes_at_most_one: True
 beta_each_tree_contributes_at_most_one: True
 ```
+
+## What to Review First
+
+For an external reviewer or a new ChatGPT session, start here:
+
+1. `brca_run_outputs_complete_sga/run_summary_MPL.txt`
+2. `brca_run_outputs_complete_sga/SingleNode_analysis_MPL.csv`
+3. `brca_run_outputs_complete_sga/PathwayPair_analysis_MPL.csv`
+4. `brca_run_outputs_complete_sga/debug_artifacts/alpha_beta_invariant_checks.txt`
+5. `brca_run_outputs_complete_sga/debug_artifacts/alpha_gene_by_tree_matrix.csv`
+6. `brca_run_outputs_complete_sga/debug_artifacts/beta_pair_by_tree_matrix.csv`
+7. `brca_run_outputs_complete_sga/debug_artifacts/bootstrap_tree_summaries.csv`
+8. `brca_run_outputs_complete_sga/debug_artifacts/sample_alignment_diagnostics.txt`
+9. `brca_run_outputs_complete_sga/debug_artifacts/raw_sga_frequency_before_top500.csv`
+10. `brca_run_outputs_complete_sga/debug_artifacts/MPL_DEG_audit_per_sample.csv`
+
+Papers are in `papers/`.
+
+TCGA input datasets are in `datasets/tcga_brca_inputs/`. The only omitted raw
+input from git is `tcga_RSEM_Hugo_norm_count.gz` because it is about 892 MB; it
+is intended to be attached as a GitHub Release asset.
