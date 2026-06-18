@@ -1,0 +1,3 @@
+seeds: [101, 202, 303]
+bootstraps_per_seed: 20
+seconds: 4.65

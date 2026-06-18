@@ -68,7 +68,7 @@ d = pd.DataFrame(0, index=all_, columns=unique_list)
 # Computes the 'Number of appearances as partners in the same branch'
 UniqueTrees = Tree_df['Tree'].unique().tolist()
 for k in UniqueTrees:
-	remove_double = []
+    remove_double = []
     Tree_df_temp = Tree_df[Tree_df['Tree']==k]
     Tree_df_temp = Tree_df_temp[Tree_df_temp['Node']!='0']
     z = np.array(Tree_df_temp)
@@ -95,8 +95,8 @@ for k in UniqueTrees:
                 current_gene_1 = current_gene + '_1'
                 par_child = prev_gene_dir + '___' + current_gene
                 if par_child not in remove_double:
-                	d.loc[prev_gene_dir,current_gene] = d.loc[prev_gene_dir,current_gene] + 1
-                	remove_double.append(par_child)
+                    d.loc[prev_gene_dir,current_gene] = d.loc[prev_gene_dir,current_gene] + 1
+                    remove_double.append(par_child)
                 next_search = next_search - 1
                 direction = z[i][3]
                 
@@ -124,4 +124,3 @@ PathwayPair_df = PathwayPair_df[['Number of appearances as partners in the same 
 
 # Save Pathway Pair analysis as csv file 
 PathwayPair_df.to_csv('PathwayPair_analysis.csv')
-
