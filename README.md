@@ -88,4 +88,7 @@ Papers are in `papers/`.
 
 TCGA input datasets are in `datasets/tcga_brca_inputs/`. The only omitted raw
 input from git is `tcga_RSEM_Hugo_norm_count.gz` because it is about 892 MB; it
-is intended to be attached as a GitHub Release asset.
+is not uploaded to this repository. Its UCSC Xena download URL is documented in
+`datasets/tcga_brca_inputs/DOWNLOADS.md`. The derived BRCA DEG matrix and MPL
+audit files are included, so the current MPL pilot can be reviewed without that
+large raw expression matrix.

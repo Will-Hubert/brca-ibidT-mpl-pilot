@@ -28,7 +28,8 @@ tcga_RSEM_Hugo_norm_count.gz
 ```
 
 It is about 892 MB, so it is too large for normal GitHub git storage. It is
-uploaded as a GitHub Release asset when available.
+not uploaded to this repository. Its UCSC Xena source URL is documented in
+`tcga_brca_inputs/DOWNLOADS.md`.
 
 The pilot output already includes the derived BRCA DEG matrix and MPL-specific
 audit files, so reviewers can inspect the current MPL run without downloading
