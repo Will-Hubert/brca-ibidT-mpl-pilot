@@ -82,6 +82,17 @@ def parse_args() -> argparse.Namespace:
         help="IBI-DT structure prior parameter. Original demo uses 1.",
     )
     parser.add_argument(
+        "--seed",
+        type=int,
+        default=1,
+        help="Base random seed for bootstrap sampling.",
+    )
+    parser.add_argument(
+        "--stratified-bootstrap",
+        action="store_true",
+        help="Bootstrap DEG=0 and DEG=1 samples separately to preserve class counts.",
+    )
+    parser.add_argument(
         "--outdir",
         default=str(HERE.parent / "brca_run_outputs_complete_sga"),
         help="Output directory.",
@@ -186,15 +197,58 @@ def combine_sga(
     return combined, stats
 
 
-def run_one_target(sga_deg: pd.DataFrame, bootstraps: int, q: float, verbose_tree: bool) -> pd.DataFrame:
+def bootstrap_sample(
+    sga_deg: pd.DataFrame,
+    tree_id: int,
+    seed: int,
+    stratified: bool,
+) -> pd.DataFrame:
+    if not stratified:
+        boot = sga_deg.sample(frac=1, replace=True, random_state=seed + tree_id).copy()
+    else:
+        pieces = []
+        for pheno_value, group in sga_deg.groupby("pheno", sort=True):
+            pieces.append(
+                group.sample(
+                    n=group.shape[0],
+                    replace=True,
+                    random_state=seed * 100000 + tree_id * 10 + int(pheno_value),
+                )
+            )
+        boot = pd.concat(pieces, axis=0).sample(
+            frac=1,
+            random_state=seed * 100000 + tree_id * 10 + 9,
+        )
+    boot.index = list(range(1, boot.shape[0] + 1))
+    return boot
+
+
+def run_one_target(
+    sga_deg: pd.DataFrame,
+    bootstraps: int,
+    q: float,
+    verbose_tree: bool,
+    seed: int,
+    stratified_bootstrap: bool,
+) -> tuple[pd.DataFrame, pd.DataFrame]:
     all_rows = []
+    class_count_rows = []
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     clock_start = datetime.now()
 
     for qq in range(1, bootstraps + 1):
         start_time = time.time()
-        boot = sga_deg.sample(frac=1, replace=True, random_state=qq).copy()
-        boot.index = list(range(1, boot.shape[0] + 1))
+        boot = bootstrap_sample(sga_deg, qq, seed, stratified_bootstrap)
+        deg_0_count = int((boot["pheno"] == 0).sum())
+        deg_1_count = int((boot["pheno"] == 1).sum())
+        class_count_rows.append(
+            {
+                "tree_id": qq,
+                "DEG_0_count": deg_0_count,
+                "DEG_1_count": deg_1_count,
+                "total_count": int(boot.shape[0]),
+            }
+        )
         boot.insert(loc=1, column="A0", value=1)
 
         traits = torch.as_tensor(boot[["pheno"]].values.copy(), dtype=torch.float64, device=device)
@@ -253,7 +307,7 @@ def run_one_target(sga_deg: pd.DataFrame, bootstraps: int, q: float, verbose_tre
         columns=["Marginal", "Node", "Level", "Branch", "OR_Details", "Additional_Stat", "Tree"],
     )
     print(f"total elapsed seconds: {(datetime.now() - clock_start).seconds}")
-    return tree_df
+    return tree_df, pd.DataFrame(class_count_rows)
 
 
 def run_original_single_node_and_pathway_pair_analysis(outdir: Path) -> None:
@@ -316,8 +370,16 @@ def main() -> None:
         f"SGA genes={sga.shape[1]}, DEG positives={int(deg['pheno'].sum())}, "
         f"bootstraps={args.bootstraps}"
     )
-    tree_df = run_one_target(sga_deg, args.bootstraps, args.q, args.verbose_tree)
+    tree_df, class_counts_df = run_one_target(
+        sga_deg,
+        args.bootstraps,
+        args.q,
+        args.verbose_tree,
+        args.seed,
+        args.stratified_bootstrap,
+    )
     tree_df.to_csv(original_trees_path)
+    class_counts_df.to_csv(outdir / "bootstrap_class_counts.csv", index=False)
     shutil.copyfile(original_trees_path, trees_path)
 
     run_original_single_node_and_pathway_pair_analysis(outdir)
@@ -347,6 +409,10 @@ def main() -> None:
         f"DEG_positive_samples: {int(deg['pheno'].sum())}",
         f"DEG_positive_fraction: {float(deg['pheno'].mean()):.6f}",
         f"bootstraps: {args.bootstraps}",
+        f"q: {args.q}",
+        f"seed: {args.seed}",
+        f"stratified_bootstrap: {args.stratified_bootstrap}",
+        f"bootstrap_class_counts_file: {outdir / 'bootstrap_class_counts.csv'}",
         f"original_DEG_file: {original_deg_path}",
         f"original_SGA_file: {original_sga_path}",
         f"original_trees_file: {original_trees_path}",

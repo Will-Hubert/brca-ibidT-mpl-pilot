@@ -1,0 +1,10 @@
+alpha_beta_invariant_checks
+bootstraps: 200
+max_alpha_total: 196
+max_beta_total: 96
+alpha_cell_max: 1
+beta_cell_max: 1
+alpha_total_le_bootstraps: True
+beta_total_le_bootstraps: True
+alpha_each_tree_contributes_at_most_one: True
+beta_each_tree_contributes_at_most_one: True

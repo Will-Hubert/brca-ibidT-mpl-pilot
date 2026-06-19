@@ -1,0 +1,13 @@
+sample_alignment_diagnostics
+X_sample_count: 779
+Y_sample_count: 779
+intersection_count: 779
+missing_in_X_count: 0
+missing_in_Y_count: 0
+sample_order_match: True
+Y_NA_count: 0
+X_NA_count: 0
+joined_matrix_NA_count: 0
+Y_non_binary_values: []
+X_min: 0
+X_max: 1

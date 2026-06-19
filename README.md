@@ -69,6 +69,60 @@ alpha_each_tree_contributes_at_most_one: True
 beta_each_tree_contributes_at_most_one: True
 ```
 
+## 200-Tree Stratified Bootstrap Validation
+
+Two follow-up MPL validation runs were added without modifying the original
+IBI-DT tree search or the original alpha/beta analysis script:
+
+- `brca_run_outputs_mpl_200_q1_stratified/`
+  - target: `MPL`
+  - bootstraps: `200`
+  - q: `1.0`
+  - seed: `101`
+  - stratified bootstrap: `True`
+- `brca_run_outputs_mpl_200_q075_stratified/`
+  - target: `MPL`
+  - bootstraps: `200`
+  - q: `0.75`
+  - seed: `101`
+  - stratified bootstrap: `True`
+
+Each bootstrap tree preserves the original MPL DEG class counts:
+
+```text
+DEG 0 = 553
+DEG 1 = 226
+total = 779
+```
+
+The comparison report is:
+
+- `mpl_q1_vs_q075_comparison.md`
+
+Brief validation summary:
+
+```text
+q=1.0:
+  trees: 200
+  max alpha: 196
+  max beta: 96
+  average tree depth: 31.64
+  maximum tree depth: 52
+  average unique SGA per tree: 63.27
+
+q=0.75:
+  trees: 200
+  max alpha: 98
+  max beta: 23
+  average tree depth: 6.64
+  maximum tree depth: 10
+  average unique SGA per tree: 13.85
+
+top-20 alpha overlap: 13 / 20
+alpha/beta invariants: PASS for both runs
+stratified class-count checks: PASS for both runs
+```
+
 ## What to Review First
 
 For an external reviewer or a new ChatGPT session, start here:

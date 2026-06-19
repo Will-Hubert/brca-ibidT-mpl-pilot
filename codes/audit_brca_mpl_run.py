@@ -167,9 +167,35 @@ def reconstruct_bootstrap_deg_counts(sga_deg: pd.DataFrame, bootstraps: int) -> 
 
 
 def write_tree_summaries(
-    tree_df: pd.DataFrame, sga_deg: pd.DataFrame, audit_dir: Path, bootstraps: int
+    tree_df: pd.DataFrame,
+    sga_deg: pd.DataFrame,
+    audit_dir: Path,
+    bootstraps: int,
+    outdir: Path,
 ) -> None:
-    deg_counts = reconstruct_bootstrap_deg_counts(sga_deg, bootstraps)
+    class_counts_path = outdir / "bootstrap_class_counts.csv"
+    if class_counts_path.exists():
+        class_counts = pd.read_csv(class_counts_path)
+        class_counts.to_csv(audit_dir / "bootstrap_class_counts.csv", index=False)
+        deg_counts = class_counts.rename(
+            columns={
+                "tree_id": "Tree",
+                "DEG_0_count": "bootstrap_DEG_0",
+                "DEG_1_count": "bootstrap_DEG_1",
+            }
+        )
+    else:
+        deg_counts = reconstruct_bootstrap_deg_counts(sga_deg, bootstraps)
+        deg_counts.rename(
+            columns={
+                "Tree": "tree_id",
+                "bootstrap_DEG_0": "DEG_0_count",
+                "bootstrap_DEG_1": "DEG_1_count",
+            }
+        ).assign(total_count=lambda df: df["DEG_0_count"] + df["DEG_1_count"]).to_csv(
+            audit_dir / "bootstrap_class_counts.csv",
+            index=False,
+        )
     rows = []
     for tree_id, group in tree_df.groupby("Tree"):
         nonzero = group[group["Node"].astype(str) != "0"]
@@ -451,7 +477,7 @@ def main() -> None:
     deg, selected_sga, sga_deg, scna_sga, mutation_sga, common_samples = prepare_sga_deg(args)
 
     write_alpha_beta_logs(tree_df, audit_dir, args.bootstraps)
-    write_tree_summaries(tree_df, sga_deg, audit_dir, args.bootstraps)
+    write_tree_summaries(tree_df, sga_deg, audit_dir, args.bootstraps, outdir)
     write_sample_alignment(audit_dir, deg, selected_sga, sga_deg)
     write_raw_sga_frequency(audit_dir, scna_sga, mutation_sga, common_samples, selected_sga)
     write_mpl_deg_audit(args, audit_dir, deg)

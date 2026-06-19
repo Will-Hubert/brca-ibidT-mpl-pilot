@@ -1,0 +1,35 @@
+BRCA IBI-DT run
+target_gene: MPL
+IBI_DT_algorithm_source: original IBIDT_core.py
+single_node_and_pathway_pair_source: original SingleNode_and_PathwayPair_analysis.py
+SGA_source: TCGA BRCA GISTIC thresholded copy-number + MC3 non-silent gene-level mutation
+SGA_rule: GISTIC -2 or 2 -> 1; MC3 non-silent mutation 1 -> 1; combined SGA = SCNA OR mutation
+mutation_events_included: True
+gistic_file: /Users/wenbohuang/Desktop/UF/Jinling Liu Program/TCGA_PanCancer_RNAseq/brca_gistic_thresholded_by_genes.gz
+mutation_file: /Users/wenbohuang/Desktop/UF/Jinling Liu Program/TCGA_PanCancer_RNAseq/mc3.v0.2.8.PUBLIC.nonsilentGene.xena.gz
+samples_used: 779
+DEG_samples_available: 1092
+SCNA_samples_overlap_DEG: 1074
+mutation_samples_overlap_DEG: 785
+SGA_genes_used_top_by_frequency: 500
+SCNA_genes_with_any_event_before_top_filter: 24706
+mutation_genes_with_any_event_before_top_filter: 15480
+combined_SGA_genes_with_any_event_after_top_filter: 500
+combined_SGA_ones_in_selected_matrix: 59535
+DEG_positive_samples: 226
+DEG_positive_fraction: 0.290116
+bootstraps: 200
+q: 1.0
+seed: 101
+stratified_bootstrap: True
+bootstrap_class_counts_file: brca_run_outputs_mpl_200_q1_stratified/bootstrap_class_counts.csv
+original_DEG_file: brca_run_outputs_mpl_200_q1_stratified/DEG.csv
+original_SGA_file: brca_run_outputs_mpl_200_q1_stratified/SGA.csv
+original_trees_file: brca_run_outputs_mpl_200_q1_stratified/IBIDT_trees.csv
+original_single_node_file: brca_run_outputs_mpl_200_q1_stratified/SingleNode_analysis.csv
+original_pathway_pair_file: brca_run_outputs_mpl_200_q1_stratified/PathwayPair_analysis.csv
+trees_file: brca_run_outputs_mpl_200_q1_stratified/IBIDT_trees_MPL.csv
+single_node_file: brca_run_outputs_mpl_200_q1_stratified/SingleNode_analysis_MPL.csv
+pathway_pair_file: brca_run_outputs_mpl_200_q1_stratified/PathwayPair_analysis_MPL.csv
+prepared_DEG_file: brca_run_outputs_mpl_200_q1_stratified/DEG_MPL.csv
+prepared_SGA_file: brca_run_outputs_mpl_200_q1_stratified/SGA_complete_SCNA_or_mutation.csv
