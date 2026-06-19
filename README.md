@@ -25,9 +25,36 @@ This module is an integral part of our framework, designed to utilize the tree i
 
 β Statistic for Pathway Pairs: In addition to single node analysis, this file also computes the β statistic for pathway pairs and saves it in PathwayPair_analysis.csv.
 
+## Canonical Completed Method Run
+
+The current canonical completed run for this project is:
+
+- Output directory: `brca_run_outputs_mpl_200_q075_stratified/`
+- Target DEG phenotype: `MPL`
+- Samples used after X/Y alignment: `779`
+- SGA genes used: top `500` by combined alteration frequency
+- Bootstrap trees: `200`
+- q: `0.75`
+- Seed: `101`
+- Stratified bootstrap: `True`
+- Per-tree DEG class counts: `DEG 0 = 553`, `DEG 1 = 226`, total `779`
+- Tree generation: original `codes/IBIDT_core.py`
+- Alpha/beta analysis: original `codes/SingleNode_and_PathwayPair_analysis.py`
+
+This completed run verifies that the method executes cleanly and that the
+alpha/beta counting invariants hold. It is not a final biological conclusion.
+
+`q=1.0` in `brca_run_outputs_mpl_200_q1_stratified/` is retained as a parameter
+contrast. The earlier `brca_run_outputs_complete_sga/` directory is a 20-tree
+pilot/smoke-test run and is not the main result.
+
+Run-completion details are documented in:
+
+- `METHOD_RUN_COMPLETION.md`
+
 ## BRCA MPL Pilot Run
 
-This repository also contains a TCGA BRCA pilot run for one target DEG gene:
+This repository also contains the earlier TCGA BRCA pilot run for one target DEG gene:
 
 - Target DEG phenotype: `MPL`
 - SGA definition: TCGA BRCA GISTIC gene-level copy-number alteration (`-2` or `2`) OR MC3 non-silent mutation
